@@ -1,4 +1,4 @@
 from api.views import lobby
 from django.urls import path
 
-urlpatterns = [path("", lobby)]
+urlpatterns = [path("", lobby), path("auth", lobby)]

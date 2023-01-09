@@ -6,6 +6,22 @@
 </head>
 <body>
   <h1>Lets Chat!</h1>
+    <div style="margin-top: 40px">
+        <form id="auth">
+        <label>Auth:</label>
+            <input type="text" name="username" placeholder="username" aria-label="username">
+            <input type="password" name="password" placeholder="password" aria-label="password">
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <div style="margin-top: 40px">
+        <form id="chat">
+            <label>Chat</label>
+                <input type="text" name="message" aria-label="message">
+                <button type="submit">Send!</button>
+        </form>
+    </div>
 
     <script type="text/javascript">
         let url = `ws://${window.location.host}/ws/chat/`
@@ -15,6 +31,19 @@
             let data = JSON.parse(e.data)
             console.log('Data:', data)
         }
+
+        let auth = document.getElementById("auth")
+        auth.addEventListener('submit', (e) => {
+            e.preventDefault()
+            let username = e.target.username.value
+            let password = e.target.password.value
+            console.log(
+                "username", username
+            )
+            console.log(
+                "password", password
+            )
+        })
 
     </script>
 </body>
