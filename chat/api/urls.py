@@ -1,4 +1,8 @@
-from api.views import lobby
+from api import views
 from django.urls import path
 
-urlpatterns = [path("", lobby), path("auth", lobby)]
+# urlpatterns = [path("", lobby), path("auth", lobby)]
+urlpatterns = [
+    path("", views.index, name="index"),
+    path("<str:room_name>/", views.room, name="room"),
+]
