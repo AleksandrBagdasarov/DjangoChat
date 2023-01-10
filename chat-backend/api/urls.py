@@ -1,5 +1,6 @@
 from api.actions.auth import UserBasicAuthView
 from api.actions.chat import (
+    ChatByNameView,
     DeleteChatView,
     LeaveChatView,
     MessagesView,
@@ -15,6 +16,7 @@ from rest_framework_simplejwt.views import (
 urlpatterns = [
     # chat/
     path("chat", NewChatView.as_view(), name="new_chat"),
+    path("chat/search", ChatByNameView.as_view(), name="search-chat_by_name"),
     path(
         "chat/<str:chat_id>/messages",
         MessagesView.as_view(),
