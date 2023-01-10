@@ -1,7 +1,4 @@
-from api.actions.chat.search.serializers import (
-    ChatByNameSerializer,
-    NameSerializer,
-)
+from api.actions.chat.search.serializers import ChatByNameSerializer
 from api.models import Chat
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
