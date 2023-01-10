@@ -19,6 +19,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
+
+# .env
+POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = (
     "django-insecure-g*(z)3xdd_4&skalg_n^5^p+@m1w=kh3paonztolui4(o952=n"
@@ -40,10 +45,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "drf_yasg",
     "api",
+    "websocket",
 ]
 
-ASGI_APPLICATION = "chat.asgi.application"
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
@@ -79,16 +87,21 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = "chat.asgi.application"
 WSGI_APPLICATION = "chat.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
+AUTH_USER_MODEL = "api.user"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "postgres",
+        "USER": POSTGRES_USER,
+        "PASSWORD": POSTGRES_PASSWORD,
+        "HOST": "localhost",
+        "PORT": "",
     }
 }
 
@@ -133,3 +146,9 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}

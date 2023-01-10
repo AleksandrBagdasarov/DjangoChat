@@ -5,7 +5,7 @@ class PingConsumer(AsyncJsonWebsocketConsumer):
     groups = ["broadcast"]
 
     async def connect(self):
-        group_name = "default"
+        self.user = self.scope["user"]
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         # self.group_name = group_name
         self.room_group_name = "chat_%s" % self.room_name
@@ -14,7 +14,7 @@ class PingConsumer(AsyncJsonWebsocketConsumer):
         )
         await self.accept()
         await self.send_json(
-            {"type": "init", "message": f"conected to: {group_name}"}
+            {"type": "init", "message": f"conected to: {self.room_group_name}"}
         )
 
     async def receive_json(self, content, **kwargs):

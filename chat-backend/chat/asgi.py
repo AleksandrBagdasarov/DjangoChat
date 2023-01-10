@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.1/howto/deployment/asgi/
 
 import os
 
-import api.routing
+import websocket.routing
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
@@ -29,7 +29,7 @@ application = ProtocolTypeRouter(
             AuthMiddlewareStack(
                 URLRouter(
                     # re_path(r"^front(end)/$", consumers.AsyncChatConsumer.as_asgi()),
-                    api.routing.websocket_urlpatterns,
+                    websocket.routing.websocket_urlpatterns,
                 )
             )
         ),
