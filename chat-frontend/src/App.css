@@ -49,11 +49,14 @@ body {
   background-color: antiquewhite;
   padding-bottom: 10px;
   align-self: flex-start;
+  margin: 5px;
+  border-radius: 5px 5px 5px 0;
 }
 
 .owner {
   align-self: flex-end;
   background-color: aquamarine;
+  border-radius: 5px 5px 0 5px;
 }
 
 .chat-input {
@@ -64,8 +67,12 @@ body {
 
 .chat-input input {
   flex: 5;
+  border: none;
+  min-height: 24px;
 }
 
 .chat-input button {
   flex: 1;
+  border: none;
+  background-color: white;
 }

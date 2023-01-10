@@ -1,4 +1,4 @@
-from api.actions.chat.serializers import MessageSerializer
+from api.actions.chat.messages.serializers import MessageSerializer
 from api.models import Chat, Message
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, permissions, response, status
