@@ -1,14 +1,20 @@
+from api.models import Chat
+from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
 
-class PingConsumer(AsyncJsonWebsocketConsumer):
+class ChatConsumer(AsyncJsonWebsocketConsumer):
     groups = ["broadcast"]
 
     async def connect(self):
         self.user = self.scope["user"]
-        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        # self.group_name = group_name
-        self.room_group_name = "chat_%s" % self.room_name
+        self.chat_id = self.scope["url_route"]["kwargs"]["chat_id"]
+        chat = await sync_to_async(Chat.objects.filter, thread_sensitive=True)(
+            id=self.chat_id
+        )
+        if not chat:
+            await self.disconnect(404)
+        self.room_group_name = "chat_%s" % self.chat_id
         await self.channel_layer.group_add(
             self.room_group_name, self.channel_name
         )
@@ -18,7 +24,7 @@ class PingConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def receive_json(self, content, **kwargs):
-        credentials = content.get("credentials", {})
+        # credentials = content.get("credentials", {})
         message = content.get("message", "")
         await self.channel_layer.group_send(
             self.room_group_name, {"type": "chat_message", "message": message}

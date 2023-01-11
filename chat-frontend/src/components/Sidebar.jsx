@@ -23,7 +23,7 @@ export const Sidebar = () => {
 
       <ul className="chats">
 
-        <li className="chats__item"><p>chat 1</p></li>
+        <li className="chats__item"><p>{"(Anonymous)"}</p></li>
         <li className="chats__item"><p>chat 2</p></li>
         <li className="chats__item"><p>chat 3</p></li>
         <li className="btn-add-chat"><button type='button' className='btn-add-chat'>+</button></li>
