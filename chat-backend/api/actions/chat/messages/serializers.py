@@ -1,4 +1,4 @@
-from api.models import Chat, Message, User
+from api.models import Message
 from rest_framework import serializers
 
 
