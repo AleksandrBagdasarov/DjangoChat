@@ -33,7 +33,7 @@ SECRET_KEY = (
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "api",
     "websocket",
+    "corsheaders",
 ]
 
 CHANNEL_LAYERS = {
@@ -60,6 +61,9 @@ CHANNEL_LAYERS = {
 
 
 MIDDLEWARE = [
+    # corsheaders
+    "corsheaders.middleware.CorsMiddleware",
+    # default
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

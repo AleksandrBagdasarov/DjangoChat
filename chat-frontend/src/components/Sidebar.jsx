@@ -1,7 +1,20 @@
 import React from 'react'
+import env from '../Env'
+import axios from 'axios'
+import { Link } from 'react-router-dom'
+import {useDispatch, useSelector} from "react-redux";
 
 
 export const Sidebar = () => {
+  const user = useSelector((state) => state.user);
+
+  const auth = (
+    <Link to={"/signup"} type='button' className='btn-footer auth'>auth</Link>
+  )
+  const logount = (
+    <button type='button' className='btn-footer auth'>logout</button>
+  )
+
   return (
     <>
       <div className="sidebar__item title">
@@ -19,7 +32,8 @@ export const Sidebar = () => {
 
 
       <div className="sidebar__footer">
-        <button type='button' className='btn-footer auth'> auth </button>
+        {user.loggedIn ? logount: auth}
+
         <button type='button' className='btn-footer settings'>sett</button>
         <button type='button' className='btn-footer dashboard'>dash</button>
       </div>

@@ -1,5 +1,7 @@
-from api.actions.auth.serializers import (UserAuthResponseSerializer,
-                                          UserBasicAuthSerializer)
+from api.actions.auth.serializers import (
+    UserAuthResponseSerializer,
+    UserBasicAuthSerializer,
+)
 from api.models.user import User
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import response, status, views
@@ -10,7 +12,8 @@ class UserBasicAuthView(views.APIView):
     serializer_class = UserBasicAuthSerializer
 
     @swagger_auto_schema(
-        responses={status.HTTP_200_OK: UserAuthResponseSerializer()}
+        responses={status.HTTP_200_OK: UserAuthResponseSerializer()},
+        request_body=UserBasicAuthSerializer(),
     )
     def post(self, request, *args, **kwargs):
 
