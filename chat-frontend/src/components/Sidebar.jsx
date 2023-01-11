@@ -1,32 +1,28 @@
 import React from 'react'
 
+
 export const Sidebar = () => {
   return (
-    <div className='sidebar-items'>
-      <div className="side-item brand">
-        <h2>Lets Code</h2>
+    <>
+      <div className="sidebar__item title">
+        <h1 className='title-text'>Lets Code</h1>
       </div>
-      <div className="side-item ">
-        <div>Sign Up</div>
-        <div>Sign In</div>
-      </div>
-      <div className="side-item">
-        <h4>Chat List</h4>
-        <div>Chat 1</div>
-        <div>Chat 2</div>
-        <div>Chat 3</div>
-        <button>Add +</button>
-      </div>
-      <div className="side-item">
-        <h4>Dashboard</h4>
-        <div>dashboard 1</div>
-        <div>dashboard 2</div>
-        <div>dashboard 3</div>
-      </div>
-      <div className="side-item">
-        <h4>Settings</h4>
 
+      <ul className="chats">
+
+        <li className="chats__item"><p>chat 1</p></li>
+        <li className="chats__item"><p>chat 2</p></li>
+        <li className="chats__item"><p>chat 3</p></li>
+        <li className="btn-add-chat"><button type='button' className='btn-add-chat'>+</button></li>
+      </ul>
+
+
+
+      <div className="sidebar__footer">
+        <button type='button' className='btn-footer auth'> auth </button>
+        <button type='button' className='btn-footer settings'>sett</button>
+        <button type='button' className='btn-footer dashboard'>dash</button>
       </div>
-    </div>
+    </>
   )
 }

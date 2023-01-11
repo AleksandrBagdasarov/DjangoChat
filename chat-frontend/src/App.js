@@ -1,11 +1,12 @@
+import React from 'react';
 import './App.css';
-import {Home} from './pages/Home';
+import { Home } from './pages/Home';
 import { Sidebar } from './components/Sidebar';
 import { ChatContent } from './components/ChatContent';
 
 function App() {
   return (
-    <div className="App">
+    <div className="container">
       <div className='sidebar'>
         <Sidebar/>
       </div>
