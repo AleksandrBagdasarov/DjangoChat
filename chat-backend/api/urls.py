@@ -6,6 +6,7 @@ from api.actions.chat import (
     MessagesView,
     NewChatView,
 )
+from api.actions.dashboard import UserToMessageView
 from django.urls import path
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -14,6 +15,12 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
+    # dashboard/
+    path(
+        "dashboard/chat/<str:chat_id>",
+        UserToMessageView.as_view(),
+        name="dashboard-user_to_message",
+    ),
     # chat/
     path("chat", NewChatView.as_view(), name="new_chat"),
     path("chat/search", ChatByNameView.as_view(), name="search-chat_by_name"),

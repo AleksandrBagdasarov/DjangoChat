@@ -1,0 +1,18 @@
+[
+  {
+    "model": "api.chat",
+    "pk": 1,
+    "fields": {
+      "owner": 1,
+      "name": "hello world"
+    }
+  },
+  {
+    "model": "api.chat",
+    "pk": 2,
+    "fields": {
+      "owner": 2,
+      "name": "hello world 2"
+    }
+  }
+]

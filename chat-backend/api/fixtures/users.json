@@ -1,0 +1,18 @@
+[
+  {
+    "model": "api.user",
+    "pk": 1,
+    "fields": {
+      "username": "default user",
+      "password": "default user"
+    }
+  },
+  {
+    "model": "api.user",
+    "pk": 2,
+    "fields": {
+      "username": "default user 2",
+      "password": "default user 2"
+    }
+  }
+]
