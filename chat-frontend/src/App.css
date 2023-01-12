@@ -227,3 +227,7 @@ body {
   border-radius: 0 5px   5px 0;
   border-left: 2px solid var(--common-color);
 }
+
+.btn-submit:hover {
+  background-color: var(--accent-color);
+}

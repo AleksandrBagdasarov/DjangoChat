@@ -3,16 +3,23 @@ import env from '../Env'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import {useDispatch, useSelector} from "react-redux";
+import { userActions } from '../store/user'
 
 
 export const Sidebar = () => {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const setLogout = () => {
+    dispatch(userActions.logOut())
+  }
+
 
   const auth = (
     <Link to={"/signup"} type='button' className='btn-footer auth'>auth</Link>
   )
   const logount = (
-    <button type='button' className='btn-footer auth'>logout</button>
+    <button onClick={setLogout} type='button' className='btn-footer auth'>logout</button>
   )
 
   return (

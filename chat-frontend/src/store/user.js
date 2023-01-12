@@ -7,7 +7,8 @@ const userSlice = createSlice(
             refresh: "",
             access: "",
             loggedIn: false,
-            chats: []
+            chats: [],
+            messages: [],
         },
         reducers: {
             signUp(state, action) {
@@ -20,6 +21,7 @@ const userSlice = createSlice(
                 state.refresh = ""
                 state.loggedIn = false
                 state.chats = []
+                state.messages = []
             },
             setChats(state, action) {
                 state.chats = action.payload
@@ -30,6 +32,14 @@ const userSlice = createSlice(
             },
             removeChat(state, action) {
                 console.log("Not Implemented!")
+            },
+            pushMessage(state, action) {
+                state.messages.push(
+                    action.payload
+                )
+            },
+            setMessages(state, action) {
+                state.messages = action.payload
             }
         }
     }

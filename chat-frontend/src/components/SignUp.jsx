@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { userActions } from '../store/user'
 import {useDispatch, useSelector} from "react-redux";
-import axios from 'axios'
+import axios from 'axios';
 import env from "../Env";
 import { Navigate } from "react-router-dom";
 

@@ -1,29 +1,69 @@
 import env from '../Env';
 import React, { useState, useCallback, useEffect } from 'react';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
+import {useDispatch, useSelector} from "react-redux";
+import { userActions } from '../store/user';
+// import { ChatMessage } from './ChatMessage';
+import axios from 'axios';
+
 
 
 export const ChatContent = () => {
-  const [messageHistory, setMessageHistory] = useState([]);
-  let client = new W3CWebSocket('ws://127.0.0.1:8000/ws/chat/1/');
+  let user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const [messages, setMessages] = useState([]);
+  const [messageText, setMessageText] = useState("");
+
+  let client = new W3CWebSocket('ws://@127.0.0.1:8000/ws/chat/1/?access=' + user.access);
+
   useEffect(() => {
-    client.onopen = () => console.log("Connected!")
+    client.onopen = () => console.log("Connected!");
     client.onmessage = (message) => {
         const msg = JSON.parse(message.data);
-        console.log("msg", msg)
+        console.log("received", msg)
+        console.log((msg.message), msg.message)
+        if (msg.message) {
+          dispatch(userActions.pushMessage(msg.message));
+          setMessages([user.messages, msg.message]);
+        }
       }
-    }
+    loadMessages();
+    setMessages(user.messages);
+    },
+    []
   )
+
+  const loadMessages = () => {
+    axios(
+      {
+        method: 'get',
+        url: env.baseUrl + '/chat/messages?chat_id=1',
+        headers: {
+          'Authorization': 'Bearer ' + user.access
+        }
+      }
+    ).then(
+      r => {
+          dispatch(userActions.setMessages(r.data))
+          setMessages(r.data)
+        }
+    ).catch(
+      err => console.log(err)
+    );
+  }
+  console.log(user.messages);
+
+
 
 
   const handleSendMessage = (e) => {
     e.preventDefault();
-    const message = e.target.newMassage.value;
-    console.log('input', message);
+    console.log('input', messageText);
     client.send(JSON.stringify({
       type: 'message',
-      message: message,
+      message: messageText,
     }))
+    setMessageText("");
   }
 
   return (
@@ -31,14 +71,16 @@ export const ChatContent = () => {
     <div className='chat'>
 
       <ul className="chat-list">
-        <li className="chat-list_item">smmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmms<span>00:00</span></li>
-        <li className="chat-list_item owner">smmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmms<span>00:00</span></li>
-        <li className="chat-list_item">sms<span>00:00</span></li>
+        {messages.map((msg) => {
+            return (
+                <li className={"chat-list_item" + (msg.owner ? ' owner': '')}>{msg.text}<span>00:00</span></li>
+              )
+        })}
       </ul>
 
-      <form className='input-form' onSubmit={handleSendMessage}>
-        <textarea className='owner-input'  placeholder='message ...' name="newMassage" id="new-massage" cols="3" rows="3"></textarea>
-        <button className='btn-submit' type='submit'>SEND</button>
+      <form className='input-form'>
+        <textarea className='owner-input' onChange={(e) => setMessageText(e.target.value)} value={messageText} placeholder='message ...' name="newMassage" id="new-massage" cols="3" rows="3"></textarea>
+        <button className='btn-submit' onClick={handleSendMessage} type='button'>SEND</button>
       </form>
 
     </div>
