@@ -1,0 +1,24 @@
+[
+  {
+    "model": "api.scheduledmessage",
+    "pk": 1,
+    "fields": {
+      "user_id": 1,
+      "chat_id": 1,
+      "text": "hello world",
+      "created_at": "2023-01-13 18:26:00.0",
+      "execute_at": "2023-01-13 18:26:00.0"
+    }
+  },
+  {
+    "model": "api.scheduledmessage",
+    "pk": 2,
+    "fields": {
+      "user_id": 1,
+      "chat_id": 1,
+      "text": "hello world 2",
+      "created_at": "2023-01-13 18:26:00.0",
+      "execute_at": "2023-01-13 18:26:00.0"
+    }
+  }
+]
