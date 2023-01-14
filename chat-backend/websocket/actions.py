@@ -22,6 +22,13 @@ def add_message_to_chat(user: User, chat: Chat, text: str):
 
 
 @database_sync_to_async
+def set_scheduled_message_executed(scheduled_message_id: int):
+    scheduled_message = ScheduledMessage.objects.get(id=scheduled_message_id)
+    scheduled_message.executed = True
+    scheduled_message.save()
+
+
+@database_sync_to_async
 def add_scheduled_message(
     user: User, chat: Chat, text: str, execute_at: datetime
 ):

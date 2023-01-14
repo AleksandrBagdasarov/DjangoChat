@@ -6,6 +6,7 @@ from websocket.actions import (
     add_message_to_chat,
     add_scheduled_message,
     chat_exist,
+    set_scheduled_message_executed,
 )
 
 
@@ -31,6 +32,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def receive_json(self, content, **kwargs):
         message_text = content.get("message", "")
         scheduled_message = content.get("scheduled_message", False)
+        scheduler = content.get("scheduler")
 
         if scheduled_message:
             execute_at = parse_datetime(content["execute_at"])
@@ -66,6 +68,11 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                     "user_id": self.user.id,
                 },
             )
+            # If this message from scheduler
+            # must provide "scheduled_message_id" key
+            if scheduler:
+                scheduled_message_id = content.get("scheduled_message_id")
+                await set_scheduled_message_executed(scheduled_message_id)
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(

@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     "api",
     "websocket",
     "corsheaders",
+    "django_apscheduler",
+    "scheduler",
 ]
 
 CHANNEL_LAYERS = {
