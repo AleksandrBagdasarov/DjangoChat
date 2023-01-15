@@ -1,24 +1,21 @@
+import asyncio
 import logging
 
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
+from apscheduler.triggers.interval import IntervalTrigger
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django_apscheduler import util
 from django_apscheduler.jobstores import DjangoJobStore
 from django_apscheduler.models import DjangoJobExecution
-from scheduler.actions import send_scheduled_messages
 
-logger = logging.getLogger("scheduler")
-logger.setLevel(logging.DEBUG)
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter(
-    "%(levelname)9s %(asctime)s %(name)s %(message)s: "
-)
-ch.setFormatter(formatter)
-logger.addHandler(ch)
+# from django_apscheduler import util
+# from django_apscheduler.jobstores import DjangoJobStore
+# from django_apscheduler.models import DjangoJobExecution
+from scheduler.actions import ScheduledMessageHandler, logger, start
 
 
 # The `close_old_connections` decorator ensures that database connections, that have become
@@ -41,34 +38,40 @@ class Command(BaseCommand):
     help = "Runs APScheduler."
 
     def handle(self, *args, **options):
-        scheduler = BackgroundScheduler(timezone=settings.TIME_ZONE)
-        scheduler.add_jobstore(DjangoJobStore(), "default")
+        scheduler = AsyncIOScheduler()
+        # scheduler.add_jobstore(DjangoJobStore(), "default")
 
-        # Send scheduled message
+        seconds = 10
         scheduler.add_job(
-            send_scheduled_messages,
+            # ScheduledMessageHandler.start,
+            start,
             id="send_scheduled_messages",
             max_instances=1,
-            trigger=CronTrigger(second="*/20"),
+            trigger=IntervalTrigger(seconds=seconds),
             replace_existing=True,
+        )
+        logger.info(
+            f"Added IntervalTrigger(seconds={seconds}) job: 'send_scheduled_messages'."
         )
 
-        # Delete old job executions
-        scheduler.add_job(
-            delete_old_job_executions,
-            trigger=CronTrigger(
-                day_of_week="mon", hour="00", minute="00"
-            ),  # Midnight on Monday, before start of the next work week.
-            id="delete_old_job_executions",
-            max_instances=1,
-            replace_existing=True,
-        )
-        logger.info("Added weekly job: 'delete_old_job_executions'.")
+        # scheduler.add_job(
+        #     delete_old_job_executions,
+        #     trigger=CronTrigger(
+        #         day_of_week="mon", hour="00", minute="00"
+        #     ),  # Midnight on Monday, before start of the next work week.
+        #     id="delete_old_job_executions",
+        #     max_instances=1,
+        #     replace_existing=True,
+        # )
+        # logger.info(
+        #     "Added weekly job: 'delete_old_job_executions'."
+        # )
 
         try:
+            logger.info("Starting ... ")
             scheduler.start()
-            logger.info("Starting ...")
+            asyncio.get_event_loop().run_forever()
         except KeyboardInterrupt:
-            logger.info("Stopping ...")
+            logger.info("Stopping ... ")
             scheduler.shutdown()
             logger.info("Scheduler shut down successfully!")
