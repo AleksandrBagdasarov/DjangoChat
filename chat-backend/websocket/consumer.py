@@ -8,6 +8,14 @@ from websocket.actions import (
     chat_exist,
     set_scheduled_message_executed,
 )
+from websocket.serializers import (
+    ChatMessageSerializer,
+    MessageSerializer,
+    ReceiveJsonTypes,
+    ReceiveJsonTypesSerializer,
+    SchedulerProcessSerializer,
+    get_serializer_class,
+)
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
@@ -30,49 +38,16 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         await self.accept()
 
     async def receive_json(self, content, **kwargs):
-        message_text = content.get("message", "")
-        scheduled_message = content.get("scheduled_message", False)
-        scheduler = content.get("scheduler")
+        # check correct message type
+        type_serializer = ReceiveJsonTypesSerializer(
+            data={"type": content.get("type", "")}
+        )
+        type_serializer.is_valid(raise_exception=True)
 
-        if scheduled_message:
-            execute_at = parse_datetime(content["execute_at"])
-            await add_scheduled_message(
-                user=self.user,
-                chat=self.chat,
-                text=message_text,
-                execute_at=execute_at,
-            )
-        else:
-            result = await add_message_to_chat(
-                user=self.user, chat=self.chat, text=message_text
-            )
-
-            # !important
-            # <message_obj> should have same keys as
-            # api GET messages serializer
-            message_obj = {
-                "id": result.id,
-                "owner": False,
-                "username": self.user.username,
-                "user": self.user.id,
-                "chat": self.chat.id,
-                "text": message_text,
-                "created_at": datetime.now().strftime("%Y-%m-%d"),
-            }
-
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    "type": "chat_message",
-                    "message_obj": message_obj,
-                    "user_id": self.user.id,
-                },
-            )
-            # If this message from scheduler
-            # must provide "scheduled_message_id" key
-            if scheduler:
-                scheduled_message_id = content.get("scheduled_message_id")
-                await set_scheduled_message_executed(scheduled_message_id)
+        serializer_class = get_serializer_class(type_serializer.data["type"])
+        serializer = serializer_class(data=content)
+        serializer.is_valid(raise_exception=True)
+        await serializer.process(chat_consumer=self)
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(

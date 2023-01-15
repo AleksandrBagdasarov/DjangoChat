@@ -11,6 +11,7 @@ from api.models import User
 from asgiref.sync import sync_to_async
 from chat.settings import DATABASES
 from rest_framework_simplejwt.tokens import RefreshToken
+from websocket.serializers import ReceiveJsonTypes
 from websockets import connect
 
 logger = logging.getLogger("scheduler")
@@ -77,6 +78,7 @@ class ScheduledMessageHandler:
             access = str(refresh.access_token)
 
             payload = {
+                "type": ReceiveJsonTypes.SCHEDULER,
                 "message": scheduled_msg.text,
                 "scheduled_message_id": scheduled_msg.id,
             }

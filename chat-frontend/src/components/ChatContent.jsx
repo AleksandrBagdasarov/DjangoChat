@@ -60,8 +60,9 @@ export const ChatContent = () => {
     e.preventDefault();
     console.log('input', messageText);
     client.send(JSON.stringify({
-      type: 'message',
-      message: messageText,
+        type: 'scheduled_message',
+        execute_at: '2023-01-15 21:47:21.080100',
+        message: messageText,
     }))
     setMessageText("");
   }
