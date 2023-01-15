@@ -43,6 +43,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             data={"type": content.get("type", "")}
         )
         type_serializer.is_valid(raise_exception=True)
+        # todo should i return response about invalid type??
 
         serializer_class = get_serializer_class(type_serializer.data["type"])
         serializer = serializer_class(data=content)
