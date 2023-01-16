@@ -12,5 +12,10 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
 
     def is_owner(self, obj):
-        user_id = self.context.get("user_id") or self.context["request"].user.id
+        if "request" in self.context:
+            user_id = self.context["request"].user.id
+        elif "user_id" in self.context:
+            user_id = self.context["user_id"]
+        else:
+            return False
         return True if user_id == obj.user_id else False
