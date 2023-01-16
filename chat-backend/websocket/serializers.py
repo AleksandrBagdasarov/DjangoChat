@@ -1,5 +1,6 @@
 from api.actions.chat.messages.serializers import MessageSerializer
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from websocket.actions import (
     add_message_to_chat,
     add_scheduled_message,
@@ -91,10 +92,26 @@ class ScheduledMessageSerializer(ChatMessageSerializer):
         )
 
 
+class RefreshTokenSerializer(serializers.Serializer):
+    refresh = serializers.CharField(max_length=512)
+
+    async def process(self, chat_consumer):
+        refresh = RefreshToken(token=self.data["refresh"])
+        access = refresh.access_token
+        await chat_consumer.send_json(
+            {
+                "type": ReceiveJsonTypes.REFRESH,
+                "refresh": str(refresh),
+                "access": str(access),
+            }
+        )
+
+
 def get_serializer_class(type: str):
     serializers = {
         ReceiveJsonTypes.CHAT_MESSAGE: ChatMessageSerializer,
         ReceiveJsonTypes.SCHEDULED_MESSAGE: ScheduledMessageSerializer,
         ReceiveJsonTypes.SCHEDULER: SchedulerProcessSerializer,
+        ReceiveJsonTypes.REFRESH: RefreshTokenSerializer,
     }
     return serializers[type]

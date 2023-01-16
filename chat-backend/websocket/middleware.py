@@ -21,13 +21,13 @@ class QueryAuthMiddleware:
     async def __call__(self, scope, receive, send):
         dict_query = parse_qs(scope["query_string"].decode())
         access = dict_query.get("access")
-        refresh = dict_query.get("refresh")
+        # refresh = dict_query.get("refresh")
 
         if access:
             payload = AccessToken(token=access[0])
-        elif refresh:
-            refresh = RefreshToken(token=refresh[0])
-            payload = refresh.access_token
+        # elif refresh: # todo move to ws action refresh
+        #     refresh = RefreshToken(token=refresh[0])
+        #     payload = refresh.access_token
         else:
             payload = {}
 
