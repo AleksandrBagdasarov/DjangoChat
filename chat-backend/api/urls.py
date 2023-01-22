@@ -1,12 +1,3 @@
-from api.actions.auth import UserBasicAuthView
-from api.actions.chat import (
-    ChatByNameView,
-    DeleteChatView,
-    LeaveChatView,
-    MessagesView,
-    NewChatView,
-    ShowMyChatsView,
-)
 from api.actions.dashboard import ChatToMessageByDateView, UserToMessageView
 from django.urls import path
 from rest_framework_simplejwt.views import (
@@ -14,6 +5,13 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenVerifyView,
 )
+from api.views.auth import UserBasicAuthView
+from api.views.chat import ChatViewSet
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register('chat', ChatViewSet, basename='chat_view_set')
+
 
 urlpatterns = [
     # dashboard/
@@ -27,21 +25,6 @@ urlpatterns = [
         ChatToMessageByDateView.as_view(),
         name="dashboard-chat_to_message",
     ),
-    # chat/
-    path("chat", NewChatView.as_view(), name="new_chat"),
-    path("chat/show-my-chats", ShowMyChatsView.as_view(), name="show_my_chat"),
-    path("chat/search", ChatByNameView.as_view(), name="search-chat_by_name"),
-    path(
-        "chat/messages",
-        MessagesView.as_view(),
-        name="get_messages",
-    ),
-    path(
-        "chat/delete",
-        DeleteChatView.as_view(),
-        name="delete_chat",
-    ),
-    path("chat/leave", LeaveChatView.as_view(), name="leave_chat"),
     # auth/
     path("auth/signup", UserBasicAuthView.as_view(), name="register"),
     path(
@@ -50,3 +33,5 @@ urlpatterns = [
     path("auth/refresh", TokenRefreshView.as_view(), name="token_refresh"),
     path("auth/verify", TokenVerifyView.as_view(), name="token_verify"),
 ]
+
+urlpatterns.extend(router.urls)

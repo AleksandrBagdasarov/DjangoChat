@@ -1,4 +1,4 @@
-from api.actions.auth.serializers import (
+from api.views.auth.serializers import (
     UserAuthResponseSerializer,
     UserBasicAuthSerializer,
 )

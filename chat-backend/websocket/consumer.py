@@ -1,19 +1,7 @@
-from datetime import datetime
-
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from django.utils.dateparse import parse_datetime
-from websocket.actions import (
-    add_message_to_chat,
-    add_scheduled_message,
-    chat_exist,
-    set_scheduled_message_executed,
-)
+from websocket.actions import chat_exist
 from websocket.serializers import (
-    ChatMessageSerializer,
-    MessageSerializer,
-    ReceiveJsonTypes,
     ReceiveJsonTypesSerializer,
-    SchedulerProcessSerializer,
     get_serializer_class,
 )
 

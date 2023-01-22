@@ -71,26 +71,25 @@ class ScheduledMessageHandler:
 
         chat_id = scheduled_msg.chat_id
         user_id = scheduled_msg.user_id
+        ws_url = f"{URL_TO_WS_CHAT}{chat_id}/"
+        if user_id:
+            user = await get_user(user_id)
+            if user:
+                refresh = RefreshToken.for_user(user)
+                access = str(refresh.access_token)
+                ws_url += f"?access={access}"
 
-        user = await get_user(user_id)
-        if user:
-            refresh = RefreshToken.for_user(user)
-            access = str(refresh.access_token)
+        payload = {
+            "type": ReceiveJsonTypes.SCHEDULER,
+            "message": scheduled_msg.text,
+            "scheduled_message_id": scheduled_msg.id,
+        }
+        payload.setdefault("scheduler", True)
 
-            payload = {
-                "type": ReceiveJsonTypes.SCHEDULER,
-                "message": scheduled_msg.text,
-                "scheduled_message_id": scheduled_msg.id,
-            }
-            payload.setdefault("scheduler", True)
+        async with connect(ws_url) as ws:
 
-            ws_url = f"{URL_TO_WS_CHAT}{chat_id}/?access={access}"
-            async with connect(ws_url) as ws:
-
-                payload = json.dumps(payload)
-                await ws.send(payload)
-        else:
-            logger.error(f"user_id: {user_id} Does Not Exist.")
+            payload = json.dumps(payload)
+            await ws.send(payload)
 
     @classmethod
     def _adapter(cls, scheduled_message):

@@ -16,7 +16,7 @@ export const Sidebar = () => {
 
 
   const auth = (
-    <Link to={"/signup"} type='button' className='btn-footer auth'>auth</Link>
+    <Link to={"/sign-in"} type='button' className='btn-footer auth'>auth</Link>
   )
   const logount = (
     <button onClick={setLogout} type='button' className='btn-footer auth'>logout</button>

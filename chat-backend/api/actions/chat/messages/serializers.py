@@ -7,9 +7,10 @@ class MessageSerializer(serializers.ModelSerializer):
     owner = serializers.SerializerMethodField(method_name="is_owner")
 
     class Meta:
-        # fields = "__all__"
-        exclude = ["chat", "user"]
         model = Message
+        fields = "__all__"
+        # read_only_fields = ['user']
+        # extra_kwargs = {'user': {'read_only': True}}
 
     def is_owner(self, obj):
         if "request" in self.context:

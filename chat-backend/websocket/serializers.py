@@ -7,6 +7,8 @@ from websocket.actions import (
     set_scheduled_message_executed,
 )
 
+# todo should i create SendJsonTypes?
+
 
 class ReceiveJsonTypes:
     # Regular message
